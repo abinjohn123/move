@@ -30,6 +30,7 @@
   <body>
     <div class="sidebar">
       <img src="logo.png" alt="Logo" class="logo" />
+      <button class="workout__btn btn--clear">Clear All</button>
 
       <ul class="workouts">
         <form class="form hidden">
@@ -68,7 +69,7 @@
           <button class="form__btn">OK</button>
         </form>
 
-        <!-- <li class="workout workout--running" data-id="1234567890">
+        <li class="workout workout--running" data-id="1234567890">
           <h2 class="workout__title">Running on April 14</h2>
           <div class="workout__details">
             <span class="workout__icon">🏃‍♂️</span>
@@ -90,6 +91,22 @@
             <span class="workout__value">178</span>
             <span class="workout__unit">spm</span>
           </div>
+          <button class="workout__delete workout__btn">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="workout__delete-icon"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M4.5 19.5l15-15m-15 0l15 15"
+              />
+            </svg>
+          </button>
         </li>
 
         <li class="workout workout--cycling" data-id="1234567891">
@@ -114,7 +131,23 @@
             <span class="workout__value">223</span>
             <span class="workout__unit">m</span>
           </div>
-        </li> -->
+          <button class="workout__delete workout__btn">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="workout__delete-icon"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M4.5 19.5l15-15m-15 0l15 15"
+              />
+            </svg>
+          </button>
+        </li>
       </ul>
 
       <p class="copyright">
