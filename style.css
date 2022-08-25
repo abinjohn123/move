@@ -133,6 +133,10 @@ a:visited {
   transition: background-color 0.2s, color 0.2s;
 }
 
+.btn--clear.hidden {
+  display: none;
+}
+
 .btn--clear:hover {
   background-color: var(--color-dark--2);
   color: var(--color-light--2);

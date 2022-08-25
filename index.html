@@ -18,11 +18,19 @@
       integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
       crossorigin=""
     />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css"
+    />
     <script
       defer
       src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
       integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
       crossorigin=""
+    ></script>
+    <script
+      defer
+      src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"
     ></script>
     <script defer src="script.js"></script>
     <title>mapty // Map your workouts</title>
@@ -30,7 +38,7 @@
   <body>
     <div class="sidebar">
       <img src="logo.png" alt="Logo" class="logo" />
-      <button class="workout__btn btn--clear">Clear All</button>
+      <button class="workout__btn btn--clear hidden">Clear All</button>
 
       <ul class="workouts">
         <form class="form hidden">
@@ -69,7 +77,7 @@
           <button class="form__btn">OK</button>
         </form>
 
-        <li class="workout workout--running" data-id="1234567890">
+        <!-- <li class="workout workout--running" data-id="1234567890">
           <h2 class="workout__title">Running on April 14</h2>
           <div class="workout__details">
             <span class="workout__icon">🏃‍♂️</span>
@@ -147,7 +155,7 @@
               />
             </svg>
           </button>
-        </li>
+        </li> -->
       </ul>
 
       <p class="copyright">
