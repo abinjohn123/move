@@ -14,6 +14,7 @@ const inputElevation = document.querySelector('.form__input--elevation');
 class App {
   constructor() {
     this._getLocation();
+    this._workout = new Workout();
   }
   _getLocation() {
     if (!navigator.geolocation) return;
@@ -38,13 +39,17 @@ class App {
       attribution: '© OpenStreetMap',
     }).addTo(this._map);
 
-    this._map.on('click', this._addMarker.bind(this));
+    this._map.on('click', this._addStop.bind(this));
   }
 
-  _addMarker(event) {
+  _addStop(event) {
     const { lat, lng } = event.latlng;
-    const position = [lat, lng];
+    this._workout._addPoint({ lat, lng });
 
+    this._renderMarkers(this._workout._geoPoints);
+  }
+
+  _renderMarkers(geoPoints) {
     const openPopup = function () {
       this.openPopup();
     };
@@ -61,17 +66,52 @@ class App {
       closeButton: false,
     };
 
-    const marker = L.marker(position, markerOptions)
-      .addTo(this._map)
-      .bindPopup('10', popupOptions)
-      .openPopup();
+    // Iterate over map layers and remove layers corresponding to markers
+    Object.values(this._map._layers).forEach(layer => {
+      if (layer._shadow) layer.removeFrom(this._map);
+    });
 
-    marker.on('click', this._removeMarker.bind(this));
-    marker.on('dragend', openPopup.bind(marker));
+    geoPoints.forEach(point => {
+      const marker = L.marker(point, markerOptions)
+        .addTo(this._map)
+        .bindPopup(
+          `${this._workout._getIndex({ lat: point[0], lng: point[1] })}`,
+          popupOptions
+        )
+        .openPopup();
+
+      marker.on('click', this._removeMarker.bind(this));
+      marker.on('dragend', openPopup.bind(marker));
+    });
   }
 
   _removeMarker(ev) {
     ev.target.removeFrom(this._map);
+    this._workout._removePoint(ev.latlng);
+    this._renderMarkers(this._workout._geoPoints);
+  }
+}
+
+class Workout {
+  constructor() {
+    this._geoPoints = [];
+  }
+
+  _addPoint({ lat, lng }) {
+    this._geoPoints.push([lat, lng]);
+  }
+
+  _removePoint({ lat, lng }) {
+    this._geoPoints = this._geoPoints.filter(
+      point => point[0] !== lat && point[1] !== lng
+    );
+  }
+
+  _getIndex({ lat, lng }) {
+    return (
+      this._geoPoints.findIndex(point => point[0] === lat && point[1] === lng) +
+      1
+    );
   }
 }
 
