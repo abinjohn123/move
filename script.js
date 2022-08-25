@@ -33,11 +33,45 @@ class App {
     const position = [latitude, longitude];
 
     this._map = L.map('map').setView(position, 18);
-    console.log(this._map);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '© OpenStreetMap',
     }).addTo(this._map);
+
+    this._map.on('click', this._addMarker.bind(this));
+  }
+
+  _addMarker(event) {
+    const { lat, lng } = event.latlng;
+    const position = [lat, lng];
+
+    const openPopup = function () {
+      this.openPopup();
+    };
+
+    const markerOptions = {
+      title: 'click and drag to move',
+      draggable: true,
+    };
+
+    const popupOptions = {
+      offset: L.point(0, 0),
+      autoClose: false,
+      closeOnClick: false,
+      closeButton: false,
+    };
+
+    const marker = L.marker(position, markerOptions)
+      .addTo(this._map)
+      .bindPopup('10', popupOptions)
+      .openPopup();
+
+    marker.on('click', this._removeMarker.bind(this));
+    marker.on('dragend', openPopup.bind(marker));
+  }
+
+  _removeMarker(ev) {
+    ev.target.removeFrom(this._map);
   }
 }
 
