@@ -39,13 +39,12 @@ class App {
       attribution: '© OpenStreetMap',
     }).addTo(this._map);
 
-    this._map.on('click', this._addStop.bind(this));
+    this._map.on('click', this._addMarker.bind(this));
   }
 
-  _addStop(event) {
+  _addMarker(event) {
     const { lat, lng } = event.latlng;
     this._workout._addPoint({ lat, lng });
-
     this._renderMarkers(this._workout._geoPoints);
   }
 
@@ -81,8 +80,14 @@ class App {
         .openPopup();
 
       marker.on('click', this._removeMarker.bind(this));
-      marker.on('dragend', openPopup.bind(marker));
+      marker.on('dragend', this._updateMarker.bind(this));
     });
+  }
+
+  _updateMarker(ev) {
+    const index = Number.parseInt(ev.target._popup._content) - 1;
+    this._workout._updatePoint(index, ev.target._latlng);
+    ev.target.openPopup();
   }
 
   _removeMarker(ev) {
@@ -105,6 +110,10 @@ class Workout {
     this._geoPoints = this._geoPoints.filter(
       point => point[0] !== lat && point[1] !== lng
     );
+  }
+
+  _updatePoint(index, { lat, lng }) {
+    this._geoPoints[index] = [lat, lng];
   }
 
   _getIndex({ lat, lng }) {
