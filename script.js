@@ -98,7 +98,7 @@ class App {
   _initPathOverlay() {
     const pathOptions = {
       color: '#3388ff',
-      weight: 8,
+      weight: 15,
       opacity: 0.8,
     };
 
