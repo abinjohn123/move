@@ -6,10 +6,7 @@ const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 
 const form = document.querySelector('.form');
 const containerWorkouts = document.querySelector('.workouts');
 const inputType = document.querySelector('.form__input--type');
-const inputDistance = document.querySelector('.form__input--distance');
-const inputDuration = document.querySelector('.form__input--duration');
-const inputCadence = document.querySelector('.form__input--cadence');
-const inputElevation = document.querySelector('.form__input--elevation');
+const outputDistance = document.querySelector('.form__input--distance');
 
 class App {
   constructor() {
@@ -128,7 +125,20 @@ class App {
 
   _renderRoute() {
     const points = this._workout._geoPoints;
+    const distance = this._calcDistance();
     this._polyline.setLatLngs(points).addTo(this._map);
+
+    outputDistance.value = `${
+      distance > 1000 ? (distance / 1000).toFixed(1) : distance
+    } ${distance > 1000 ? 'kilometers' : 'meters'}`;
+  }
+
+  _calcDistance() {
+    const points = this._workout._geoPoints;
+    let distance = 0;
+    for (let i = 0; i < points.length - 1; ++i)
+      distance += L.latLng(points[i]).distanceTo(L.latLng(points[i + 1]));
+    return Math.round(distance);
   }
 }
 
