@@ -40,17 +40,10 @@ class App {
     }).addTo(this._map);
     this._initPathOverlay();
 
-    // this._routeControl = L.Routing.control({
-    //   routeWhileDragging: false,
-    //   addWaypoints: false,
-    //   // draggableWaypoints: false,
-    // }).addTo(this._map);
-
     this._map.on('click', this._addMarker.bind(this));
   }
 
   _addMarker(event) {
-    console.log('addmarker');
     const { lat, lng } = event.latlng;
     this._workout._addPoint({ lat, lng });
     this._renderMarkers(this._workout._geoPoints);
@@ -90,7 +83,6 @@ class App {
   }
 
   _updateMarker(ev) {
-    console.log('update event');
     const index = Number.parseInt(ev.target._popup._content) - 1;
     this._workout._updatePoint(index, ev.target._latlng);
     ev.target.openPopup();
