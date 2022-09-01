@@ -38,42 +38,36 @@
   <body>
     <div class="sidebar">
       <img src="logo.png" alt="Logo" class="logo" />
-      <button class="workout__btn btn--clear hidden">Clear All</button>
+      <button class="workout__btn btn--clear">Clear All</button>
 
       <ul class="workouts">
-        <form class="form hidden">
+        <form class="form">
           <div class="form__row">
-            <label class="form__label">Type</label>
-            <select class="form__input form__input--type">
+            <label for="type" class="form__label">Type</label>
+            <select id="type" class="form__input form__input--type">
               <option value="running">Running</option>
               <option value="cycling">Cycling</option>
             </select>
           </div>
           <div class="form__row">
-            <label class="form__label">Distance</label>
-            <input class="form__input form__input--distance" placeholder="km" />
-          </div>
-          <div class="form__row">
-            <label class="form__label">Duration</label>
+            <label for="date" class="form__label">Date</label>
             <input
-              class="form__input form__input--duration"
+              id="date"
+              class="form__input form__input--date"
               placeholder="min"
+              type="date"
             />
           </div>
           <div class="form__row">
-            <label class="form__label">Cadence</label>
+            <label for="distance" class="form__label">Distance</label>
             <input
-              class="form__input form__input--cadence"
-              placeholder="step/min"
+              id="distance"
+              class="form__input form__input--distance"
+              placeholder="0"
+              disabled="disabled"
             />
           </div>
-          <div class="form__row form__row--hidden">
-            <label class="form__label">Elev Gain</label>
-            <input
-              class="form__input form__input--elevation"
-              placeholder="meters"
-            />
-          </div>
+
           <button class="form__btn">OK</button>
         </form>
 
