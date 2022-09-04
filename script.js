@@ -6,13 +6,15 @@ const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 
 const form = document.querySelector('.form');
 const containerWorkouts = document.querySelector('.workouts');
 const inputType = document.querySelector('.form__input--type');
+const inputDate = document.querySelector('.form__input--date');
 const outputDistance = document.querySelector('.form__input--distance');
 
 class App {
   constructor() {
     this._getLocation();
-    this._workout = new Workout();
-    form.addEventListener('submit', e => e.preventDefault());
+    this._points = new Point();
+    this._workouts = [];
+    form.addEventListener('submit', this._addWorkout.bind(this));
     inputType.addEventListener('change', this._routeColorHandler.bind(this));
   }
 
@@ -45,8 +47,8 @@ class App {
 
   _addMarker(event) {
     const { lat, lng } = event.latlng;
-    this._workout._addPoint({ lat, lng });
-    this._renderMarkers(this._workout._geoPoints);
+    this._points._addPoint({ lat, lng });
+    this._renderMarkers(this._points._geoPoints);
   }
 
   _renderMarkers(geoPoints) {
@@ -71,7 +73,7 @@ class App {
       const marker = L.marker(point, markerOptions)
         .addTo(this._map)
         .bindPopup(
-          `${this._workout._getIndex({ lat: point[0], lng: point[1] })}`,
+          `${this._points._getIndex({ lat: point[0], lng: point[1] })}`,
           popupOptions
         )
         .openPopup();
@@ -84,15 +86,15 @@ class App {
 
   _updateMarker(ev) {
     const index = Number.parseInt(ev.target._popup._content) - 1;
-    this._workout._updatePoint(index, ev.target._latlng);
+    this._points._updatePoint(index, ev.target._latlng);
     ev.target.openPopup();
     this._renderRoute();
   }
 
   _removeMarker(ev) {
     ev.target.removeFrom(this._map);
-    this._workout._removePoint(ev.latlng);
-    this._renderMarkers(this._workout._geoPoints);
+    this._points._removePoint(ev.latlng);
+    this._renderMarkers(this._points._geoPoints);
   }
 
   _initPathOverlay() {
@@ -119,8 +121,8 @@ class App {
       const bounds = L.bounds(p1, p2);
 
       if (bounds.contains(L.point(x, y))) {
-        this._workout._addPointInBetween(i + 1, { lat: x, lng: y });
-        this._renderMarkers(this._workout._geoPoints);
+        this._points._addPointInBetween(i + 1, { lat: x, lng: y });
+        this._renderMarkers(this._points._geoPoints);
         this._renderRoute();
       }
     }
@@ -128,7 +130,7 @@ class App {
   }
 
   _renderRoute() {
-    const points = this._workout._geoPoints;
+    const points = this._points._geoPoints;
     const distance = this._calcDistance();
     this._polyline.setLatLngs(points).addTo(this._map);
 
@@ -144,15 +146,19 @@ class App {
   }
 
   _calcDistance() {
-    const points = this._workout._geoPoints;
+    const points = this._points._geoPoints;
     let distance = 0;
     for (let i = 0; i < points.length - 1; ++i)
       distance += L.latLng(points[i]).distanceTo(L.latLng(points[i + 1]));
     return Math.round(distance);
   }
+
+  _addWorkout(e) {
+    e.preventDefault();
+  }
 }
 
-class Workout {
+class Point {
   constructor() {
     this._geoPoints = [];
   }
