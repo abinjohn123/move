@@ -12,7 +12,10 @@ class App {
   constructor() {
     this._getLocation();
     this._workout = new Workout();
+    form.addEventListener('submit', e => e.preventDefault());
+    inputType.addEventListener('change', this._routeColorHandler.bind(this));
   }
+
   _getLocation() {
     if (!navigator.geolocation) return;
 
@@ -94,7 +97,8 @@ class App {
 
   _initPathOverlay() {
     const pathOptions = {
-      color: '#3388ff',
+      // color: '#3388ff',
+      color: '#00c46a',
       weight: 15,
       opacity: 0.8,
     };
@@ -131,6 +135,12 @@ class App {
     outputDistance.value = `${
       distance > 1000 ? (distance / 1000).toFixed(1) : distance
     } ${distance > 1000 ? 'kilometers' : 'meters'}`;
+  }
+
+  _routeColorHandler() {
+    const activity = inputType.value;
+    const color = activity === 'running' ? '#00c46a' : '#ffb545';
+    this._polyline.setStyle({ color });
   }
 
   _calcDistance() {
