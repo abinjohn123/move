@@ -114,22 +114,25 @@ a:visited {
   font-weight: 800;
 }
 
+.workout__btns {
+  display: flex;
+  margin-bottom: 1rem;
+  justify-content: space-between;
+}
+
 .workout__btn {
   background: none;
   outline: none;
   border: none;
   cursor: pointer;
+
+  border-radius: 6px;
+  padding: 0.8rem;
 }
 
 .btn--clear {
-  align-self: flex-end;
-  margin-bottom: 1rem;
-
   border: solid 1px var(--color-dark--2);
-  border-radius: 6px;
-  padding: 0.8rem;
   color: var(--color-light--1);
-
   transition: background-color 0.2s, color 0.2s;
 }
 
@@ -140,6 +143,16 @@ a:visited {
 .btn--clear:hover {
   background-color: var(--color-dark--2);
   color: var(--color-light--2);
+}
+
+.btn--add-workout {
+  border: 1px solid var(--color-brand--2);
+  color: var(--color-brand--2);
+  transition: background-color 0.2s, color 0.2s;
+}
+.btn--add-workout:hover {
+  background-color: var(--color-brand--2);
+  color: #fff;
 }
 
 .workout__delete {
@@ -178,14 +191,28 @@ a:visited {
   /* Match height and activity boxes */
   /* height: 9.25rem; */
   transition: all 0.5s, transform 1ms;
+  position: relative;
 }
-
 .form.hidden {
   transform: translateY(-30rem);
   height: 0;
   padding: 0 2.25rem;
   margin-bottom: 0;
   opacity: 0;
+}
+
+.form-icon {
+  position: absolute;
+  height: 2.4rem;
+  right: 0;
+  top: 0;
+  transform: translate(-20%, 12%);
+  transition: stroke 0.2s;
+  cursor: pointer;
+}
+
+.form-icon:hover {
+  stroke: var(--color-brand--1);
 }
 
 .form__row {

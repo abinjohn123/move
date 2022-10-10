@@ -4,10 +4,12 @@
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 const form = document.querySelector('.form');
+const formClose = document.querySelector('.btn--close-form');
 const containerWorkouts = document.querySelector('.workouts');
 const inputType = document.querySelector('.form__input--type');
 const inputDate = document.querySelector('.form__input--date');
 const outputDistance = document.querySelector('.form__input--distance');
+const addWorkout = document.querySelector('.btn--add-workout');
 
 class App {
   constructor() {
@@ -155,6 +157,13 @@ class App {
 
   _addWorkout(e) {
     e.preventDefault();
+    const type = inputType.value;
+    const date = inputDate.value;
+    const coords = this._points._geoPoints;
+    const distance = this._calcDistance();
+    this._workouts.push(new Workout(type, date, coords, distance));
+
+    console.log(this._workouts);
   }
 }
 
@@ -191,4 +200,27 @@ class Point {
   }
 }
 
+class Workout {
+  constructor(type, date, coords, distance) {
+    this.type = type;
+    this.date = date;
+    this.coords = coords;
+    this.distance = distance;
+  }
+}
+
+function showForm() {
+  if (!form.classList.contains('hidden')) return;
+
+  form.classList.remove('hidden');
+}
+
+function closeForm() {
+  form.classList.add('hidden');
+}
+
+addWorkout.addEventListener('click', showForm);
+formClose.addEventListener('click', closeForm);
+
 const app = new App();
+closeForm();
