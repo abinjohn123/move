@@ -14,8 +14,11 @@ const addWorkout = document.querySelector('.btn--add-workout');
 class App {
   constructor() {
     this._getLocation();
-    this._points = new Point();
     this._workouts = [];
+    this._hideForm();
+    this._points = new Point();
+
+    addWorkout.addEventListener('click', this._displayForm.bind(this));
     form.addEventListener('submit', this._addWorkout.bind(this));
     inputType.addEventListener('change', this._routeColorHandler.bind(this));
   }
@@ -48,6 +51,7 @@ class App {
   }
 
   _addMarker(event) {
+    if (form.classList.contains('hidden')) return;
     const { lat, lng } = event.latlng;
     this._points._addPoint({ lat, lng });
     this._renderMarkers(this._points._geoPoints);
@@ -67,9 +71,7 @@ class App {
     };
 
     // Iterate over map layers and remove layers corresponding to markers
-    Object.values(this._map._layers).forEach(layer => {
-      if (layer._shadow) layer.removeFrom(this._map);
-    });
+    this._removeAllMarkers();
 
     geoPoints.forEach(point => {
       const marker = L.marker(point, markerOptions)
@@ -91,6 +93,12 @@ class App {
     this._points._updatePoint(index, ev.target._latlng);
     ev.target.openPopup();
     this._renderRoute();
+  }
+
+  _removeAllMarkers() {
+    Object.values(this._map._layers).forEach(layer => {
+      if (layer._shadow) layer.removeFrom(this._map);
+    });
   }
 
   _removeMarker(ev) {
@@ -133,6 +141,7 @@ class App {
 
   _renderRoute() {
     const points = this._points._geoPoints;
+    // console.log(points);
     const distance = this._calcDistance();
     this._polyline.setLatLngs(points).addTo(this._map);
 
@@ -141,6 +150,18 @@ class App {
     } ${distance > 1000 ? 'kilometers' : 'meters'}`;
   }
 
+  _displayForm() {
+    if (!form.classList.contains('hidden')) return;
+
+    inputDate.value = '';
+    outputDistance.value = '';
+
+    form.classList.remove('hidden');
+  }
+
+  _hideForm() {
+    form.classList.add('hidden');
+  }
   _routeColorHandler() {
     const activity = inputType.value;
     const color = activity === 'running' ? '#00c46a' : '#ffb545';
@@ -157,13 +178,22 @@ class App {
 
   _addWorkout(e) {
     e.preventDefault();
+    const distance = this._calcDistance();
+
+    if (distance < 100) {
+      alert('Distance is too short to record');
+      return;
+    }
+
     const type = inputType.value;
     const date = inputDate.value;
     const coords = this._points._geoPoints;
-    const distance = this._calcDistance();
     this._workouts.push(new Workout(type, date, coords, distance));
 
-    console.log(this._workouts);
+    this._removeAllMarkers();
+    this._points._removeAllPoints();
+    this._renderRoute();
+    this._hideForm();
   }
 }
 
@@ -188,6 +218,10 @@ class Point {
     );
   }
 
+  _removeAllPoints() {
+    this._geoPoints = [];
+  }
+
   _updatePoint(index, { lat, lng }) {
     this._geoPoints[index] = [lat, lng];
   }
@@ -209,18 +243,4 @@ class Workout {
   }
 }
 
-function showForm() {
-  if (!form.classList.contains('hidden')) return;
-
-  form.classList.remove('hidden');
-}
-
-function closeForm() {
-  form.classList.add('hidden');
-}
-
-addWorkout.addEventListener('click', showForm);
-formClose.addEventListener('click', closeForm);
-
 const app = new App();
-closeForm();
